@@ -1,6 +1,6 @@
 # Continuous Integration Tutorial
 
-This repository contains sample Github Actions scripts to help understand how automatic continuous integration is desgined and implemented.
+This repository contains sample Github Actions scripts to help understand how automatic continuous integration is desgined & implemented.
 
 Read the complete reference to [Github Actions Workflow Syntax](https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions) before proceeding. Refer to the slides on Canvas for a theoritical understanding of continuous integration.
 
@@ -43,9 +43,38 @@ First setup your machine or your teammate's machine to be the self hosted runner
 
 Answer the following questions:
 
-1. What does the __runs-on__ string  
-2. In `main.yml`, on which branch do the jest tests run when a push to main branch is made?
-3. In `main.yml`, on which branch do the jest tests run when a pull request is submitted to the deploy branch?
+1. What does the __runs-on__ string
+
+The runs-on parameter in a GitHub Actions workflow defines the computational environment where a job will be executed. In this specific configuration, runs-on: cs5500-self-hosted indicates that the workflow will be run on a custom, manually configured runner with the distinctive label "cs5500-self-hosted".
+Unlike standard GitHub-provided runners, a self-hosted runner is a machine that you personally maintain and set up to handle workflow tasks. The unique label serves as an identifier, allowing GitHub to precisely target and select the appropriate custom runner when initiating the workflow's execution.
+
+3. In `main.yml`, on which branch do the jest tests run when a push to main branch is made?
+
+  The Jest tests run on the main branch when a push event occurs on that branch. This is specified in the workflow's on section:
+
+    ```yaml
+    Copy code
+    on:
+    push:
+        branches:
+        - main
+    ```
+
+When a developer commits and pushes code directly to the main branch, this configuration ensures that the Jest test suite is immediately executed against the most recent code changes, providing immediate validation and ensuring the integrity of the main branch's codebase.
+
+5. In `main.yml`, on which branch do the jest tests run when a pull request is submitted to the deploy branch?
+
+The Jest tests run on the code as it would appear if the pull request were merged into the deploy branch.
+
+    ```yaml
+    Copy code
+    on:
+    pull_request:
+        branches:
+        - deploy
+    ```
+
+  When a pull request is opened, synchronized, or reopened targeting the deploy branch, the workflow triggers. The Jest tests run against the merged code to ensure that the proposed changes are compatible with the deploy branch before the pull request is actually merged.
 
 Next, create a new workflow yml file that captures the following continuous integration requirement:
 
